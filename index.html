@@ -19,7 +19,11 @@ input,select{background:#0a1410;border:1px solid var(--line);color:var(--text);b
 <div class="hero"><div><div class="brand">TD EDGE • WEEK 4</div><h1>NFL Touchdown Analytics</h1><div class="sub">Odds movement dashboard for Sunday, Oct. 4, 2026. Track first-observed vs. current anytime-TD prices, implied probability and steam signals.</div></div><div class="badge">● Data snapshot: <span id="snapshotDate"></span></div></div>
 <section class="cards"><div class="card"><div class="k">Players tracked</div><div class="v" id="count"></div></div><div class="card"><div class="k">Top steam</div><div class="v green" id="topSteam"></div></div><div class="card"><div class="k">Shortest TD price</div><div class="v" id="short"></div></div><div class="card"><div class="k">Games covered</div><div class="v" id="games"></div></div></section>
 <section class="panel"><h2>🔥 Top Odds Movers</h2><div class="rankgrid" id="ranks"></div></section>
-<section class="panel"><h2>Full TD Board</h2><div class="toolbar"><input id="q" placeholder="Search player, team or matchup…"><select id="pos"><option value="">All positions</option><option>RB</option><option>WR</option><option>TE</option><option>QB</option></select><select id="sig"><option value="">All signals</option><option value="Steam">Steam</option><option value="Shortening">Shortening</option><option value="Flat">Flat</option><option value="Drift">Drift</option><option value="No history">No history</option></select></div>
+<section class="panel">
+  <h2>🏆 Top TD Picks</h2>
+  <div id="tdPicks" class="rankgrid"></div>
+</section>
+  <section class="panel"><h2>Full TD Board</h2><div class="toolbar"><input id="q" placeholder="Search player, team or matchup…"><select id="pos"><option value="">All positions</option><option>RB</option><option>WR</option><option>TE</option><option>QB</option></select><select id="sig"><option value="">All signals</option><option value="Steam">Steam</option><option value="Shortening">Shortening</option><option value="Flat">Flat</option><option value="Drift">Drift</option><option value="No history">No history</option></select></div>
 <div class="tablewrap"><table><thead><tr><th>Game</th><th>Player</th><th>Pos</th><th>First observed</th><th>Current</th><th>Implied TD%</th><th>Move</th><th>OMS</th><th>Signal</th></tr></thead><tbody id="body"></tbody></table></div></section>
 <section class="panel"><div class="note"><b>Method note:</b> “First observed” is the earliest price captured in our tracker, not necessarily the sportsbook’s official opening line. Movement is the change in implied probability from that captured price to the current snapshot. Odds are informational and can change quickly.</div></section>
 </main><script>
@@ -64,6 +68,7 @@ document.querySelector('#ranks').innerHTML=
     </div>
   `).join('');
     render();
+    renderTdPicks();
   }catch(error){
     console.error('EvenOdds live feed error:',error);
   }
@@ -94,7 +99,21 @@ function tdScore(x) {
     (probabilityScore * 0.35) +
     (steamScore * 0.25)
   );
-}
+}function renderTdPicks() {
+  const picks = DATA.slice()
+    .map(x => ({ ...x, score: tdScore(x) }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 5);
+
+  document.querySelector('#tdPicks').innerHTML = picks.map((x, i) => `
+    <div class="rank">
+      <div class="n">#${i + 1} • ${x.game}</div>
+      <div class="p">${x.player}</div>
+      <div class="m">EvenOdds TD Score: ${x.score}/100</div>
+      <div class="note">${fmt(x.current)} • ${x.signal}</div>
+    </div>
+  `).join('');
+  }                                                                                                                                                                                                                                                                                                                                                                       }
 loadLiveOdds();
 </script>
 

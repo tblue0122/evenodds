@@ -57,10 +57,21 @@ exports.handler = async function () {
         const player = event.players?.[playerID];
 
         if (!player) continue;
-
-        const books = Object.values(odd.byBookmaker || {})
-          .filter(b => b.available && b.odds != null);
-
+ const books = Object.entries(odd.byBookmaker || {})
+  .filter(([bookID, b]) => b.available && b.odds != null)
+  .map(([bookID, b]) => ({
+    bookID,
+    ...b
+  }));
+console.log(
+  "BOOK DEBUG:",
+  player.name || player.names?.display || playerID,
+  books.map(b => ({
+    book: b.bookID,
+    odds: b.odds,
+    openOdds: b.openOdds
+  }))
+);
         if (!books.length) continue;
 
         const current = Number(books[0].odds);

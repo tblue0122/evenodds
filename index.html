@@ -99,21 +99,22 @@ function tdScore(x) {
     (probabilityScore * 0.35) +
     (steamScore * 0.25)
   );
-}function renderTdPicks() {
+     function renderTdPicks() {
   const picks = DATA.slice()
     .map(x => ({ ...x, score: tdScore(x) }))
     .sort((a, b) => b.score - a.score)
     .slice(0, 5);
 
-  document.querySelector('#tdPicks').innerHTML = picks.map((x, i) => `
-    <div class="rank">
-      <div class="n">#${i + 1} • ${x.game}</div>
-      <div class="p">${x.player}</div>
-      <div class="m">EvenOdds TD Score: ${x.score}/100</div>
-      <div class="note">${fmt(x.current)} • ${x.signal}</div>
-    </div>
-  `).join('');
-  }                                                                                                                                                                                                                                                                                                                                                                       }
+  document.querySelector('#tdPicks').innerHTML =
+    picks.map((x, i) => `
+      <div class="rank">
+        <div class="n">#${i + 1} • ${x.game}</div>
+        <div class="p">${x.player}</div>
+        <div class="m">EvenOdds TD Score: ${x.score}/100</div>
+        <div class="note">${fmt(x.current)} • ${x.signal}</div>
+      </div>
+    `).join('');
+                          }                                                                                                                                                                                                                                                                                                                                                                 }
 loadLiveOdds();
 </script>
 

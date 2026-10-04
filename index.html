@@ -16,7 +16,7 @@ input,select{background:#0a1410;border:1px solid var(--line);color:var(--text);b
 .rankgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.rank{padding:14px;background:var(--panel2);border:1px solid var(--line);border-radius:13px}.rank .n{font-size:11px;color:var(--muted)}.rank .p{font-size:17px;font-weight:800;margin:3px 0}.rank .m{color:var(--green);font-weight:800}
 @media(max-width:760px){.wrap{padding:14px}.hero{align-items:flex-start;flex-direction:column}.cards{grid-template-columns:repeat(2,1fr)}.rankgrid{grid-template-columns:1fr}.card{padding:13px}.v{font-size:22px}}
 </style></head><body><main class="wrap">
-<div class="hero"><div><div class="brand">TD EDGE • WEEK 4</div><h1>NFL Touchdown Analytics</h1><div class="sub">Odds movement dashboard for Sunday, Oct. 4, 2026. Track first-observed vs. current anytime-TD prices, implied probability and steam signals.</div></div><div class="badge">● Data snapshot: Oct. 3</div></div>
+<div class="hero"><div><div class="brand">TD EDGE • WEEK 4</div><h1>NFL Touchdown Analytics</h1><div class="sub">Odds movement dashboard for Sunday, Oct. 4, 2026. Track first-observed vs. current anytime-TD prices, implied probability and steam signals.</div></div><div class="badge">● Data snapshot: <span id="snapshotDate"></span></div></div>
 <section class="cards"><div class="card"><div class="k">Players tracked</div><div class="v" id="count"></div></div><div class="card"><div class="k">Top steam</div><div class="v green" id="topSteam"></div></div><div class="card"><div class="k">Shortest TD price</div><div class="v" id="short"></div></div><div class="card"><div class="k">Games covered</div><div class="v" id="games"></div></div></section>
 <section class="panel"><h2>🔥 Top Odds Movers</h2><div class="rankgrid" id="ranks"></div></section>
 <section class="panel"><h2>Full TD Board</h2><div class="toolbar"><input id="q" placeholder="Search player, team or matchup…"><select id="pos"><option value="">All positions</option><option>RB</option><option>WR</option><option>TE</option><option>QB</option></select><select id="sig"><option value="">All signals</option><option value="Steam">Steam</option><option value="Shortening">Shortening</option><option value="Flat">Flat</option><option value="Drift">Drift</option><option value="No history">No history</option></select></div>
@@ -76,4 +76,11 @@ function render(){let q=document.querySelector('#q').value.toLowerCase(),p=docum
 let d=DATA.filter(x=>(!q||(x.player+' '+x.game).toLowerCase().includes(q))&&(!p||x.pos===p)&&(!s||x.signal.includes(s)));
 document.querySelector('#body').innerHTML=d.map(x=>`<tr><td>${x.game}</td><td class="player">${x.player}</td><td><span class="pill">${x.pos}</span></td><td>${fmt(x.first)}</td><td><b>${fmt(x.current)}</b></td><td>${x.implied.toFixed(1)}%</td><td class="move ${x.move<0?'drift':x.move>0?'steam':''}">${x.move==null?'—':(x.move>0?'+':'')+x.move.toFixed(2)+' pp'}</td><td>${x.oms??'—'}</td><td>${x.signal}</td></tr>`).join('')}
 ['q','pos','sig'].forEach(id=>document.querySelector('#'+id).addEventListener(id==='q'?'input':'change',render));render();
+  <script>
+  document.getElementById("snapshotDate").textContent =
+    new Date().toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric"
+    });
+</script>
 loadLiveOdds();</script></body></html>

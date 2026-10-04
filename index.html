@@ -76,11 +76,17 @@ function render(){let q=document.querySelector('#q').value.toLowerCase(),p=docum
 let d=DATA.filter(x=>(!q||(x.player+' '+x.game).toLowerCase().includes(q))&&(!p||x.pos===p)&&(!s||x.signal.includes(s)));
 document.querySelector('#body').innerHTML=d.map(x=>`<tr><td>${x.game}</td><td class="player">${x.player}</td><td><span class="pill">${x.pos}</span></td><td>${fmt(x.first)}</td><td><b>${fmt(x.current)}</b></td><td>${x.implied.toFixed(1)}%</td><td class="move ${x.move<0?'drift':x.move>0?'steam':''}">${x.move==null?'—':(x.move>0?'+':'')+x.move.toFixed(2)+' pp'}</td><td>${x.oms??'—'}</td><td>${x.signal}</td></tr>`).join('')}
 ['q','pos','sig'].forEach(id=>document.querySelector('#'+id).addEventListener(id==='q'?'input':'change',render));render();
-  <script>
+  
+
+loadLiveOdds();
+</script>
+
+<script>
   document.getElementById("snapshotDate").textContent =
     new Date().toLocaleDateString("en-US", {
       month: "short",
       day: "numeric"
     });
 </script>
-loadLiveOdds();</script></body></html>
+</body>
+</html>

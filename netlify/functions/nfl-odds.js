@@ -96,4 +96,42 @@ exports.handler = async function () {
           first,
           current,
           implied:
-            currentProb == null ? null : +
+          currentProb == null ? null : +currentProb.toFixed(1),
+          move,
+          oms: Math.round(
+            Math.max(0, Math.min(100, 50 + (move || 0) * 10))
+          ),
+          signal
+        });
+      }
+    }
+
+    output.sort((a, b) => (b.move || 0) - (a.move || 0));
+
+    return {
+      statusCode: 200,
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": "public, max-age=60"
+      },
+      body: JSON.stringify({
+        success: true,
+        count: output.length,
+        data: output
+      })
+    };
+
+  } catch (error) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        success: false,
+        error: error.message
+      })
+    };
+  }
+};
+
+
+
+        

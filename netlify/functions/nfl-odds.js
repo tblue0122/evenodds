@@ -63,8 +63,6 @@ exports.handler = async function () {
     bookID,
     ...b
   }));
-console.log(
-  "BOOK DEBUG:",
   player.name || player.names?.display || playerID,
   books.map(b => ({
     book: b.bookID,
@@ -74,13 +72,17 @@ console.log(
 );
         if (!books.length) continue;
 
-        const current = Number(books[0].odds);
+        // Use DraftKings consistently for opening and current odds
+const dk = books.find(b => b.bookID === "draftkings");
 
-        const opens = books
-          .map(b => Number(b.openOdds))
-          .filter(Number.isFinite);
+if (!dk) continue;
 
-        const first = opens.length ? opens[0] : current;
+const current = Number(dk.odds);
+const open = Number(dk.openOdds);
+
+if (!Number.isFinite(current)) continue;
+
+const first = Number.isFinite(open) ? open : current;
 
         const currentProb = americanProb(current);
         const firstProb = americanProb(first);

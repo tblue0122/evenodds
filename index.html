@@ -59,7 +59,7 @@ document.querySelector('#ranks').innerHTML=
     <div class="rank">
       <div class="n">#${i+1} • ${x.game}</div>
       <div class="p">${x.player}</div>
-      <div class="m">${x.move>0?'+':''}${x.move.toFixed(2)} pp</div>
+      <div class="note">EvenOdds TD Score: ${tdScore(x)}/100 • ${tdScore(x)>=85?'🔥 Elite':tdScore(x)>=70?'🟢 Strong':tdScore(x)>=55?'🟡 Watch':'⚪ Neutral'}</div><div class="m">${x.move>0?'+':''}${x.move.toFixed(2)} pp</div>
       <div class="note">${fmt(x.first)} → ${fmt(x.current)} • ${x.signal}</div>
     </div>
   `).join('');

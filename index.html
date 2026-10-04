@@ -77,7 +77,24 @@ let d=DATA.filter(x=>(!q||(x.player+' '+x.game).toLowerCase().includes(q))&&(!p|
 document.querySelector('#body').innerHTML=d.map(x=>`<tr><td>${x.game}</td><td class="player">${x.player}</td><td><span class="pill">${x.pos}</span></td><td>${fmt(x.first)}</td><td><b>${fmt(x.current)}</b></td><td>${x.implied.toFixed(1)}%</td><td class="move ${x.move<0?'drift':x.move>0?'steam':''}">${x.move==null?'—':(x.move>0?'+':'')+x.move.toFixed(2)+' pp'}</td><td>${x.oms??'—'}</td><td>${x.signal}</td></tr>`).join('')}
 ['q','pos','sig'].forEach(id=>document.querySelector('#'+id).addEventListener(id==='q'?'input':'change',render));render();
   
+function tdScore(x) {
+  const probability = Math.min(Math.max(Number(x.implied) || 0, 0), 100);
+  const movement = Math.min(Math.max(Number(x.move) || 0, 0), 10);
 
+  const probabilityScore = probability;
+  const movementScore = (movement / 10) * 100;
+
+  let steamScore = 40;
+  if (x.signal && x.signal.includes("Steam")) steamScore = 100;
+  else if (x.signal && x.signal.includes("Shortening")) steamScore = 75;
+  else if (x.signal && x.signal.includes("Flat")) steamScore = 40;
+
+  return Math.round(
+    (movementScore * 0.40) +
+    (probabilityScore * 0.35) +
+    (steamScore * 0.25)
+  );
+}
 loadLiveOdds();
 </script>
 

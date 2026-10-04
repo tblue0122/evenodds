@@ -63,15 +63,7 @@ exports.handler = async function () {
     bookID,
     ...b
   }));
-  player.name || player.names?.display || playerID,
-  books.map(b => ({
-    book: b.bookID,
-    odds: b.odds,
-    openOdds: b.openOdds
-  }))
-);
         if (!books.length) continue;
-
         // Use DraftKings consistently for opening and current odds
 const dk = books.find(b => b.bookID === "draftkings");
 
